@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String    
+  address     String
+  cart        Int[]
+  review      Review[]
+  order       Order[]
+}
+
+model Seller {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String    
+  company     String
+  product     Product[]
+}
+
+enum Category {
+  video_game
+  clothes
+  electronics
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  cloudinaryUrl String
+  price         String
+  description   String
+  category     Category
+  sellerId    Int
+  seller      Seller?   @relation(fields: [sellerId], references: [id])
+  review      Review[]
+}
+
+enum Status {
+  pending
+  delivered
+}
+
+model Order {
+  id          Int     @id @default(autoincrement())
+  custId      Int
+  prodId      Int
+  status      Status
+  customer    Customer?   @relation(fields: [custId], references: [id])
+}
+
+model Review {
+  id          Int       @id @default(autoincrement())
+  custId      Int
+  prodId      Int
+  review      String
+  customer    Customer?   @relation(fields: [custId], references: [id])
+  product     Product?    @relation(fields: [prodId], references: [id])
+}
+
+model Blacklistedtoken {
+  id          Int       @id @default(autoincrement())
+  token       String
+  createdAt   DateTime
+}
