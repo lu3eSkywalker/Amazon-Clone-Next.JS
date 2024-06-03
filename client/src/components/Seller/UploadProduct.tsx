@@ -1,6 +1,8 @@
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useState, ChangeEvent, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+
 
 
 interface FormData {
@@ -10,7 +12,10 @@ interface FormData {
   category: string,
 }
 
-
+interface TokenPayload {
+  role: string;
+  id: string
+}
 
 const UploadProduct = () => {
   
@@ -43,6 +48,21 @@ useEffect(() => {
         [name]: value
     }));
 };
+
+
+
+const savingInfoToLocalstorage = () => {
+  const token: any = localStorage.getItem('accessToken');
+
+  let decodedToken: { payload: TokenPayload } | null = null;
+
+  decodedToken = jwtDecode<{ payload: TokenPayload }>(token);
+  localStorage.setItem('id', decodedToken.payload.id)
+}
+
+useEffect(() => {
+  savingInfoToLocalstorage();
+}, [])
 
 
 

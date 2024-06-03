@@ -78,7 +78,7 @@ export async function getServerSideProps(context: { query: { page?: string, cate
 
     const fetchData = async (page: number): Promise<Product[]> => {
         try {
-            const response = await fetch(`http://localhost:4000/api/v1/bycategory/${category}?page=${page}&limit=5`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/bycategory/${category}?page=${page}&limit=5`);
             const data = await response.json();
             return data.data || [];
         }
